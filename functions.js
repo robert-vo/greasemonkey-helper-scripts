@@ -14,3 +14,16 @@ const wait = async milliseconds => {
 function log(text) {
     console.log(text);
 }
+
+
+var maxAttempts = 50;
+var defaultTimeout = 500;
+
+const attemptCheckElement = async selector => {
+    while(maxAttempts > 0) {
+        maxAttempts--;
+        checkElement(selector).then(selector => {
+            selector.click();
+        })
+    }
+}
