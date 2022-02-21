@@ -5,6 +5,13 @@ const checkElementById = async selector => {
     return document.getElementById(selector);
 };
 
+const checkElementByQuerySelector = async selector => {
+    while (document.querySelector(selector) === null) {
+        await new Promise(resolve => requestAnimationFrame(resolve))
+    }
+    return document.querySelector(selector);
+};
+
 
 const wait = async milliseconds => {
     await new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -15,11 +22,15 @@ function log(text) {
     console.log(text);
 }
 
+const reload = () => {
+    window.location.reload();
+}
+
 
 var maxAttempts = 50;
 var defaultTimeout = 500;
 
-const attemptClickElementById = async id => {
+const attemptClickElementById = async (id) => {
     checkElementById(id).then(async (selector) => {
         log('found! trying to click...');
         while(maxAttempts-- > 0) {
@@ -33,6 +44,7 @@ const attemptClickElementById = async id => {
                 console.log("id: %s is diabled! not clicking.", id);
             }
         }
-        log('ran out of clicks :/ maybe try refreshing the page?');
+        log('ran out of clicks :/ reloading page!');
+        window.location.reload();
     })
 }
