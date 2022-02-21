@@ -1,4 +1,4 @@
-const checkElement = async selector => {
+const checkElementById = async selector => {
     while (document.getElementById(selector) === null) {
         await new Promise(resolve => requestAnimationFrame(resolve))
     }
@@ -19,11 +19,11 @@ function log(text) {
 var maxAttempts = 50;
 var defaultTimeout = 500;
 
-const attemptCheckElement = async selector => {
-    while(maxAttempts > 0) {
-        maxAttempts--;
-        checkElement(selector).then(selector => {
+const attemptClickElementById = async id => {
+    checkElementById(id).then(selector => {
+        while(maxAttempts > 0) {
+            maxAttempts--;
             selector.click();
-        })
+        }
     }
 }
