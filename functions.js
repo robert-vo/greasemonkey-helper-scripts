@@ -22,7 +22,7 @@ var defaultTimeout = 500;
 const attemptClickElementById = async id => {
     checkElementById(id).then(async (selector) => {
         while(maxAttempts-- > 0) {
-            await wait(500);
+            await wait(defaultTimeout);
             if(selector.disabled !== true) {
                 selector.click();
             } else {
