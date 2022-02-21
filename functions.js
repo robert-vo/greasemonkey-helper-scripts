@@ -21,9 +21,13 @@ var defaultTimeout = 500;
 
 const attemptClickElementById = async id => {
     checkElementById(id).then(async (selector) => {
+        log('found! trying to click...');
         while(maxAttempts-- > 0) {
+            log('attempt # ' + maxAttempts);
             await wait(defaultTimeout);
+            console.log(selector)
             if(selector.disabled !== true) {
+                console.log('can i has click')
                 selector.click();
             } else {
                 console.log("id: %s is diabled! not clicking.", id);
