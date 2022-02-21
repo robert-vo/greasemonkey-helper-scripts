@@ -4,3 +4,13 @@ const checkElement = async selector => {
     }
     return document.getElementById(selector);
 };
+
+
+const wait = async milliseconds => {
+    await new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+
+function log(text) {
+    console.log(text);
+}
