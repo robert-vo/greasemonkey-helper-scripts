@@ -86,13 +86,21 @@ const templateIdString = (button) => `chartscript${button.display}`
 
 console.log('hi from get cookie: ' + getCookie(COOKIE_NAME));
 
-// const html = buttonConfig.map((button) => templateFn(button.display, button.value)).join(''); 
+const getCookieHtml = async () => {
+    const html = buttonConfig.map((button) => templateFn(button.display, button.value)).join(''); 
 
-// var newHTML         = document.createElement ('div');
-// newHTML.innerHTML   = html;
+    var newHTML         = document.createElement ('div');
+    newHTML.innerHTML   = html;
 
-// document.body.appendChild (newHTML);
+    // document.body.appendChild (newHTML);
 
-// buttonConfig.forEach((button) => {
-//     document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);
-// })
+    // buttonConfig.forEach((button) => {
+        // document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);
+    // });
+
+    return newHTML;
+}
+
+const attachEventListenerToCookie = async () => {
+    document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);
+}
