@@ -21,47 +21,71 @@ const setCookie = (cname, cvalue, exdays) => {
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-const dayOfYear = date => Math.floor((date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+const currDate = new Date();
+const startOfYear = new Date(currDate.getFullYear(), 0, 0);
+const earliestDate = new Date("05/29/2018"); // earliest date is 5/29/2018
+const timeToDaysMultiplier = 1000 * 60 * 60 * 24;
+const getDays = (startDate) => Math.floor((currDate - startDate) / timeToDaysMultiplier);
+
+const DISPLAY_STRINGS = {
+    ONE_DAY: '1 day',
+    FIVE_DAYS: '5 days',
+    FIFTEEN_DAYS: '15 days',
+    THIRTY_DAYS: '30 days',
+    FOURTY_FIVE_DAYS: '45 days',
+    SIXTY_DAYS: '60 days',
+    THREE_MONTHS: '3 months',
+    SIX_MONTHS: '6 months',
+    YEAR_TO_DATE: 'YTD',
+    ONE_YEAR: '1 year',
+    TWO_YEARS: '2 years',
+    ALL_TIME: 'All time',
+    CLEAR: 'Clear'
+}
+
 const DEFAULT_COOKIE_VALUE = 30;
 const DEFAULT_COOKIE_EXPIRATION_IN_DAYS = 365;
 const COOKIE_NAME = 'ChartCookie'
-const currDayOfYear = dayOfYear(new Date());
 
 var buttonConfig = [
     {
-        display: '1 day',
-        value: 1
-    },
-    {
-        display: '5 days',
-        value: 5
-    },
-    {
-        display: '30 days',
+        display: DISPLAY_STRINGS.THIRTY_DAYS,
         value: 30
     },
     {
-        display: '60 days',
+        display: DISPLAY_STRINGS.FOURTY_FIVE_DAYS,
+        value: 45
+    },
+    {
+        display: DISPLAY_STRINGS.SIXTY_DAYS,
         value: 60
     },
     {
-        display: '3 months',
+        display: DISPLAY_STRINGS.THREE_MONTHS,
         value: 90
     },
     {
-        display: '6 months',
+        display: DISPLAY_STRINGS.SIX_MONTHS,
         value: 180
     },
     {
-        display: 'YTD',
-        value: 'YTD'
+        display: DISPLAY_STRINGS.YEAR_TO_DATE,
+        value: DISPLAY_STRINGS.YEAR_TO_DATE
     },
     {
-        display: '1 year',
+        display: DISPLAY_STRINGS.ONE_YEAR,
         value: 365
     },
     {
-        display: 'Clear',
+        display: DISPLAY_STRINGS.TWO_YEARS,
+        value: 730
+    },
+    {
+        display: DISPLAY_STRINGS.ALL_TIME,
+        value: DISPLAY_STRINGS.ALL_TIME 
+    },
+    {
+        display: DISPLAY_STRINGS.CLEAR,
         value: DEFAULT_COOKIE_VALUE
     }
 ];
@@ -74,33 +98,58 @@ const checkForDefaultCookie = () => {
     }
 }
 
-checkForDefaultCookie();
+const getCookieValue = () => {
+    return getCookie(COOKIE_NAME);
+}
+
+const getNumberOfDaysFromCookie = () => {
+    const currDayOfYear = getDays(startOfYear);
+    const numberOfDaysToBeginning = getDays(earliestDate);
+
+    var cookie = getCookieValue();
+
+    if(!cookie) {
+        setCookie(COOKIE_NAME, DEFAULT_COOKIE_VALUE, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
+        return DEFAULT_COOKIE_VALUE;
+    }
+
+    switch(cookie) {
+        case DISPLAY_STRINGS.YEAR_TO_DATE:
+            return currDayOfYear;
+        case DISPLAY_STRINGS.ALL_TIME:
+            return numberOfDaysToBeginning;
+        default:
+            return cookie;
+    }
+}
+
+function eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;';  
+}
 
 const updateCookie = (display, value) => {
     setCookie(COOKIE_NAME, value, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
-    reload();
+
+    if(display === DISPLAY_STRINGS.CLEAR) {
+        console.log('clearing cookies!');
+        eraseCookie(COOKIE_NAME);
+    }
+    window.location.reload();
 }
 
-const templateFn = (display, value) => `<button type="button" id="chartscript${display}">${display}</button>`;
+const selectedButtonClass = 'btn-info';
+const otherButtonClass = 'btn-primary';
+
+const templateFn = (display, value) => `<button type="button" id="chartscript${display}" class="btn ${display == getCookieValue() || value == getNumberOfDaysFromCookie() ? selectedButtonClass : otherButtonClass}">${display}</button>`;
 const templateIdString = (button) => `chartscript${button.display}`
 
-console.log('hi from get cookie: ' + getCookie(COOKIE_NAME));
-
-const getCookieHtml = async () => {
+const getCookieHtml = () => {
     const html = buttonConfig.map((button) => templateFn(button.display, button.value)).join(''); 
-
-    var newHTML         = document.createElement ('div');
-    newHTML.innerHTML   = html;
-
-    // document.body.appendChild (newHTML);
-
-    // buttonConfig.forEach((button) => {
-        // document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);
-    // });
-
-    return newHTML;
+    return html;
 }
 
-const attachEventListenerToCookie = async () => {
-    document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);
+const attachEventListenerToCookieButtons = () => {
+    buttonConfig.forEach((button) => {
+        document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);    
+    });
 }
