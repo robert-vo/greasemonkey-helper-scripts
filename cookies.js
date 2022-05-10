@@ -131,7 +131,6 @@ const updateCookie = (display, value) => {
     setCookie(COOKIE_NAME, value, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
 
     if(display === DISPLAY_STRINGS.CLEAR) {
-        console.log('clearing cookies!');
         eraseCookie(COOKIE_NAME);
     }
     window.location.reload();
