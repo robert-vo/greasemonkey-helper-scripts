@@ -35,6 +35,33 @@ const waitForElm = selector => {
     });
 }
 
+const insertAfter = (referenceNode, newNode) => {
+    referenceNode.parentNode.insertBefore(
+        newNode,
+        referenceNode.nextSibling
+    );
+}
+
+const insertBefore = (referenceNode, newNode) => {
+    referenceNode.parentNode.insertBefore(
+        newNode, 
+        referenceNode
+    );
+}
+
+const callApi = (url, method, headers, data) => {
+    return new Promise((resolve) => {
+        GM.xmlHttpRequest({
+            headers: headers,
+            method: method,
+            url: url,
+            data: data,
+            onload: function (response) {
+                resolve(JSON.parse(response.responseText));
+            },
+        });
+    });
+}
 
 const wait = async milliseconds => {
     await new Promise(resolve => setTimeout(resolve, milliseconds));
