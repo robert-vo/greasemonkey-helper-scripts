@@ -45,7 +45,7 @@ const DISPLAY_STRINGS = {
 
 const DEFAULT_COOKIE_VALUE = 30;
 const DEFAULT_COOKIE_EXPIRATION_IN_DAYS = 365;
-const COOKIE_NAME = 'ChartCookie'
+const COOKIE_NAME = 'Q2hhcnRDb29raWU' // ChartCookie minus = base64
 
 var buttonConfig = [
     {
