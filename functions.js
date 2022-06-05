@@ -49,20 +49,6 @@ const insertBefore = (referenceNode, newNode) => {
     );
 }
 
-const callApi = (url, method, headers, data) => {
-    return new Promise((resolve) => {
-        GM.xmlHttpRequest({
-            headers: headers,
-            method: method,
-            url: url,
-            data: data,
-            onload: function (response) {
-                resolve(JSON.parse(response.responseText));
-            },
-        });
-    });
-}
-
 const wait = async milliseconds => {
     await new Promise(resolve => setTimeout(resolve, milliseconds));
 }
@@ -96,4 +82,9 @@ const attemptClickElementById = async (id) => {
         log('ran out of clicks :/ reloading page!');
         window.location.reload();
     })
+}
+
+
+const average = (nums) => {
+        return nums.reduce((a, b) => (a + b)) / nums.length;
 }
