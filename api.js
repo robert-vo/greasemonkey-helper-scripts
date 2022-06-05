@@ -12,20 +12,20 @@ const callApi = async (url, method, headers, data) => {
     });
 }
 
-async function getAllAccounts() {
+async function getAllAccounts(headers) {
     var accountsResponse = await callApi(
         API_URLS.ACCOUNTS,
         API_METHOD.GET,
-        INVESTMENTS_HTTP_HEADER
+        headers
     );
     return accountsResponse.Account;
 }
 
-async function getAllInvestments() {
+async function getAllInvestments(headers) {
     var investmentsResponse = await callApi(
         API_URLS.INVESTMENTS,
         API_METHOD.GET,
-        INVESTMENTS_HTTP_HEADER
+        headers
     );
     return investmentsResponse.Investment;
 }
