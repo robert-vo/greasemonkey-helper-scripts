@@ -1,0 +1,27 @@
+.change {
+    /*color: rgb(104, 255, 255) !important;*/
+}
+
+.up {
+    color: rgb(104, 255, 255) !important;
+}
+
+.down {
+    color: rgb(198, 28, 90) !important
+}
+
+.unchanged {
+    /*color: rgb(104, 255, 255) !important;*/
+}
+
+.th-class {
+    font-weight: bold;
+}
+
+tr.border_class td {
+  border-top: 1px solid black;
+}
+
+tr.border_class th {
+  border-top: 1px solid black;
+}
