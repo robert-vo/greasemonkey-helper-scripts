@@ -136,14 +136,21 @@ const updateCookie = (display, value) => {
     window.location.reload();
 }
 
-const selectedButtonClass = 'btn-info';
-const otherButtonClass = 'btn-primary';
+const selectedButtonClass = 'Button-button-d6872d2 Button-mint-4f86065 Button-light-08e8f16 Button-size-medium-e64554a';
+const otherButtonClass = 'Button-button-d6872d2 Button-mint-4f86065 Button-light-08e8f16 Button-size-medium-e64554a Button-fill-ghost-79530bb';
 
-const templateFn = (display, value) => `<button type="button" id="chartscript${display}" class="btn ${display == getCookieValue() || value == getNumberOfDaysFromCookie() ? selectedButtonClass : otherButtonClass}">${display}</button>`;
+const getCssClass = (display, value) => {
+    if (display == DISPLAY_STRINGS.CLEAR) {
+        return otherButtonClass; // never highlight clear
+    }
+    return display == getCookieValue() || value == getNumberOfDaysFromCookie() ? selectedButtonClass : otherButtonClass;
+}
+
+const templateStringForButton = (display, value) => `<button type="button" id="chartscript${display}" class="${getCssClass(display, value)}">${display}</button>`;
 const templateIdString = (button) => `chartscript${button.display}`
 
 const getCookieHtml = () => {
-    const html = buttonConfig.map((button) => templateFn(button.display, button.value)).join(''); 
+    const html = buttonConfig.map((button) => templateStringForButton(button.display, button.value)).join('');
     return html;
 }
 
