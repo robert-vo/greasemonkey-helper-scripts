@@ -1,5 +1,3 @@
-const APPLICATION_JSON = 'application/json'
-
 const callApi = async (url, method, headers, data) => {
     return new Promise((resolve) => {
         GM.xmlHttpRequest({
