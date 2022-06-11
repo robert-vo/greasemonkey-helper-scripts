@@ -47,6 +47,17 @@ const formatDebtToAccountingDollar = (debt) => {
     }
 }
 
-const formatDateToISOString = (date) => {
-    return date.toISOString().split('T')[0]
+const formatDateToYYYYMMDD = (date) => {
+    const year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+
+    if(month < 10) {
+        month = '0' + new String(month);
+    }
+    if(day < 10) {
+        day = '0' + new String(day);
+    }
+    console.log('returning: ' + [year, month, day].join('-') + ' for date: ' + date)
+    return [year, month, day].join('-');
 }

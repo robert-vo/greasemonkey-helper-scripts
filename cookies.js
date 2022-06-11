@@ -159,3 +159,19 @@ const attachEventListenerToCookieButtons = () => {
         document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);    
     });
 }
+
+const getCookieValueOrDefault = (cookieName, defaultValue) => {
+    const cookieValue = getcookie(cookieName);
+    if(cookieValue) {
+        if(cookieValue != defaultValue) {
+            console.log(`for cookie: ${cookieName}, using new value found in cookie: ${cookieValue}`);
+        } else {
+            console.log(`for cookie: ${cookieName}, value found is the same as default, ${defaultValue}`);
+        }
+
+        return cookieValue;
+    } else {
+        console.log(`for cookie: ${cookieName}, did not find val. returning default: ${defaultValue}`);
+        return defaultValue;
+    }
+}
