@@ -161,7 +161,7 @@ const attachEventListenerToCookieButtons = () => {
 }
 
 const getCookieValueOrDefault = (cookieName, defaultValue) => {
-    const cookieValue = getcookie(cookieName);
+    const cookieValue = getCookie(cookieName);
     if(cookieValue) {
         if(cookieValue != defaultValue) {
             console.log(`for cookie: ${cookieName}, using new value found in cookie: ${cookieValue}`);
