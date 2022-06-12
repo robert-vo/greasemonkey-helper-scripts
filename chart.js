@@ -1,9 +1,14 @@
-const CHART_IDS = {
-    LINE_CHART: 'line_chart_id'
-};
+const CHART_CONFIG = {
+    LINE_CHART: {
+        id: 'line_chart_id',
+        title: 'line-chart',
+        download_id: 'line-chart-download',
+        file_name: 'line chart'
+    }
+}
 
 const getLineChartConfig = (allTrends) => {
-    const daysAverage = 7;
+    const daysAverage = 7; // todo, set cookie that'll make days avg happen :D 
     var dates = allTrends.map(e => e.date);
 
     var minDate = dateTimeFormat.format(Math.min(...dates))
@@ -55,7 +60,7 @@ const getLineChartConfig = (allTrends) => {
                 {
                     data: moving_average_data_set,
                     fill: false,
-                    label: '7-day moving average',
+                    label: `${daysAverage}-day moving average`,
                     borderDash: [5, 5],
                     backgroundColor: COLORS.RED,
                     pointBackgroundColor: COLORS.RED,
@@ -80,7 +85,7 @@ const getLineChartConfig = (allTrends) => {
                     callbacks: {
                         label: function(context) {
                             const parsedY = currencyFormatter.format(context.parsed.y);
-                            return context.raw.ma ? `7-day moving average: ${parsedY}` : `net: ${parsedY}`;
+                            return context.raw.ma ? `${daysAverage}-day moving average: ${parsedY}` : `net: ${parsedY}`;
                         },
                         footer: function(context) {
                             const raw = context[0].raw;
@@ -115,7 +120,14 @@ const getLineChartConfig = (allTrends) => {
     }
 }
 
-const attachChartToDomId = (id, config) => {
-    var ctx = document.getElementById(id);
-    var newCart = new Chart(ctx, config);
+const attachChartToDomId = (chartConfig, config) => {
+    var ctx = document.getElementById(chartConfig.id);
+    var newChart = new Chart(ctx, config);
+    document.getElementById(chartConfig.download_id).onclick = () => {
+        var a = document.createElement('a');
+        a.href =  newChart.toBase64Image();
+        a.download = chartConfig.file_name;
+        a.click();
+    }
+    return newChart;
 }

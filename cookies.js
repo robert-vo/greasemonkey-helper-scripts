@@ -136,9 +136,6 @@ const updateCookie = (display, value) => {
     window.location.reload();
 }
 
-const selectedButtonClass = 'Button-button-d6872d2 Button-mint-4f86065 Button-light-08e8f16 Button-size-medium-e64554a';
-const otherButtonClass = 'Button-button-d6872d2 Button-mint-4f86065 Button-light-08e8f16 Button-size-medium-e64554a Button-fill-ghost-79530bb';
-
 const getCssClass = (display, value) => {
     if (display == DISPLAY_STRINGS.CLEAR) {
         return otherButtonClass; // never highlight clear
@@ -147,6 +144,7 @@ const getCssClass = (display, value) => {
 }
 
 const templateStringForButton = (display, value) => `<button type="button" id="chartscript${display}" class="${getCssClass(display, value)}">${display}</button>`;
+
 const templateIdString = (button) => `chartscript${button.display}`
 
 const getCookieHtml = () => {

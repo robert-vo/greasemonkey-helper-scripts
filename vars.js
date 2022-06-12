@@ -33,3 +33,6 @@ const API_URLS = {
 
 const TABLE_ROW_FONT_SIZE = 'font-size: 12px; border-bottom: 5px solid red';
 const PADDING_TOP = 'padding-top: 12px';
+
+const selectedButtonClass = 'Button-button-d6872d2 Button-mint-4f86065 Button-light-08e8f16 Button-size-medium-e64554a';
+const otherButtonClass = 'Button-button-d6872d2 Button-mint-4f86065 Button-light-08e8f16 Button-size-medium-e64554a Button-fill-ghost-79530bb';
