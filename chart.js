@@ -8,7 +8,8 @@ const CHART_CONFIG = {
 }
 
 const getLineChartConfig = (allTrends) => {
-    const daysAverage = 7; // todo, set cookie that'll make days avg happen :D 
+    const daysAverage = getDaysMovingAverageFromCookie();
+
     var dates = allTrends.map(e => e.date);
 
     var minDate = dateTimeFormat.format(Math.min(...dates))
