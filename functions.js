@@ -88,3 +88,5 @@ const attemptClickElementById = async (id) => {
 const average = (nums) => {
         return nums.reduce((a, b) => (a + b)) / nums.length;
 }
+
+const sumReducer = (accumulator, currentValue) => Number(accumulator) + Number(currentValue);

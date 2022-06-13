@@ -1,6 +1,7 @@
 const COLORS = {
     BLUE: '#55bae7',
-    WHITE: '#dcd7cf',
+    WHITE: 'white',
+    // WHITE: '#dcd7cf',
     YELLOW: 'rgb(255, 205, 86)',
     RED: 'rgb(255, 99, 132)',
 };

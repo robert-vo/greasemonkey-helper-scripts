@@ -4,6 +4,12 @@ const CHART_CONFIG = {
         title: 'line-chart',
         download_id: 'line-chart-download',
         file_name: 'line chart'
+    },
+    PIE_CHART_SPLIT_BY_TYPE: {
+        id: 'pie-chart-split-by-type-id',
+        title: 'pie-chart-split-by-type',
+        download_id: 'pie-chart-split-by-type-download',
+        file_name: 'pie-chart-split-by-type'
     }
 }
 
@@ -121,14 +127,71 @@ const getLineChartConfig = (allTrends) => {
     }
 }
 
+const getPieChartSplitByTypeConfig = (entire_picture) => {
+    const labels = Object.entries(entire_picture)
+        .map(([k, v]) => k);
+    const dataSet = Object.entries(entire_picture)
+        .map(([k, v]) => v);
+    const totalPortfolioValue = dataSet.reduce(sumReducer);
+    const data = {
+        labels: labels,
+        datasets: [{
+            data: dataSet,
+            backgroundColor: [
+            COLORS.RED,
+            COLORS.BLUE,
+            COLORS.YELLOW,
+            ],
+            hoverOffset: 4,
+        }]
+    };
+
+    return {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return currencyFormatter.format(context.parsed)
+                        },
+                        afterLabel: function(context) {
+                            const rawPercentage = context.parsed / totalPortfolioValue;
+                            return `${percentageFormatter.format(rawPercentage)} of portfolio`;
+                        },
+                        afterTitle: function(context) {
+                            return context[0].label
+                        },
+                    }
+                },
+                legend: {
+                    display: true,
+                    labels: {
+                        color: COLORS.WHITE
+                    },
+                    position: 'right'
+                }
+            }
+        }
+    };
+}
+
 const attachChartToDomId = (chartConfig, config) => {
     var ctx = document.getElementById(chartConfig.id);
     var newChart = new Chart(ctx, config);
-    document.getElementById(chartConfig.download_id).onclick = () => {
-        var a = document.createElement('a');
-        a.href =  newChart.toBase64Image();
-        a.download = chartConfig.file_name;
-        a.click();
+
+    var downloadButton = document.getElementById(chartConfig.download_id);
+
+    if (downloadButton) {
+        downloadButton.onclick = () => {
+            var a = document.createElement('a');
+            a.href =  newChart.toBase64Image();
+            a.download = chartConfig.file_name;
+            a.click();
+        }
     }
+    
     return newChart;
 }
