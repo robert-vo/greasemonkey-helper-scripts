@@ -62,6 +62,13 @@ const reload = () => {
     window.location.reload();
 }
 
+var dynamicColors = function() {
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    return "rgb(" + r + "," + g + "," + b + ")";
+};
+
 var maxAttempts = 50;
 var defaultTimeout = 500;
 
