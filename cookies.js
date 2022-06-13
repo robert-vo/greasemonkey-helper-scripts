@@ -27,7 +27,7 @@ const earliestDate = new Date("05/29/2018"); // earliest date is 5/29/2018
 const timeToDaysMultiplier = 1000 * 60 * 60 * 24;
 const getDays = (startDate) => Math.floor((currDate - startDate) / timeToDaysMultiplier);
 
-const DISPLAY_STRINGS = {
+const DAYS_SEARCH_DISPLAY_STRINGS = {
     ONE_DAY: '1 day',
     FIVE_DAYS: '5 days',
     FIFTEEN_DAYS: '15 days',
@@ -43,118 +43,197 @@ const DISPLAY_STRINGS = {
     CLEAR: 'Clear'
 }
 
-const DEFAULT_COOKIE_VALUE = 30;
-const DEFAULT_COOKIE_EXPIRATION_IN_DAYS = 365;
-const COOKIE_NAME = 'Q2hhcnRDb29raWU' // ChartCookie minus = base64
+const DAYS_MOVING_AVERAGE_DISPLAY_STRINGS = {
+    SEVEN_DAY: '7-day MA',
+    FIFTEEN_DAYS: '15-day MA',
+    THIRTY_DAYS: '30-day MA',
+    FOURTY_FIVE_DAYS: '45-day MA',
+    SIXTY_DAYS: '60-day MA',
+    THREE_MONTHS: '3-month MA',
+    SIX_MONTHS: '6-month MA',
+    ONE_YEAR: '1-year MA',
+}
 
-var buttonConfig = [
+const DEFAULT_DAYS_SEARCH_COOKIE_VALUE = 30;
+const DEFAULT_DAYS_MOVING_AVERAGE_COOKIE_VALUE = 7;
+const DEFAULT_COOKIE_EXPIRATION_IN_DAYS = 365;
+const DAYS_SEARCH_COOKIE_NAME = 'Q2hhcnRDb29raWU' // ChartCookie minus = base64
+const DAYS_MOVING_AVERAGE_COOKIE_NAME = 'RGF5c01vdmluZ0F2ZXJhZ2UK' // DaysMovingAverage minus = base64
+
+var daysSearchbuttonConfig = [
     {
-        display: DISPLAY_STRINGS.THIRTY_DAYS,
+        display: DAYS_SEARCH_DISPLAY_STRINGS.THIRTY_DAYS,
         value: 30
     },
     {
-        display: DISPLAY_STRINGS.FOURTY_FIVE_DAYS,
+        display: DAYS_SEARCH_DISPLAY_STRINGS.FOURTY_FIVE_DAYS,
         value: 45
     },
     {
-        display: DISPLAY_STRINGS.SIXTY_DAYS,
+        display: DAYS_SEARCH_DISPLAY_STRINGS.SIXTY_DAYS,
         value: 60
     },
     {
-        display: DISPLAY_STRINGS.THREE_MONTHS,
+        display: DAYS_SEARCH_DISPLAY_STRINGS.THREE_MONTHS,
         value: 90
     },
     {
-        display: DISPLAY_STRINGS.SIX_MONTHS,
+        display: DAYS_SEARCH_DISPLAY_STRINGS.SIX_MONTHS,
         value: 180
     },
     {
-        display: DISPLAY_STRINGS.YEAR_TO_DATE,
-        value: DISPLAY_STRINGS.YEAR_TO_DATE
+        display: DAYS_SEARCH_DISPLAY_STRINGS.YEAR_TO_DATE,
+        value: DAYS_SEARCH_DISPLAY_STRINGS.YEAR_TO_DATE
     },
     {
-        display: DISPLAY_STRINGS.ONE_YEAR,
+        display: DAYS_SEARCH_DISPLAY_STRINGS.ONE_YEAR,
         value: 365
     },
     {
-        display: DISPLAY_STRINGS.TWO_YEARS,
+        display: DAYS_SEARCH_DISPLAY_STRINGS.TWO_YEARS,
         value: 730
     },
     {
-        display: DISPLAY_STRINGS.ALL_TIME,
-        value: DISPLAY_STRINGS.ALL_TIME 
+        display: DAYS_SEARCH_DISPLAY_STRINGS.ALL_TIME,
+        value: DAYS_SEARCH_DISPLAY_STRINGS.ALL_TIME
     },
     {
-        display: DISPLAY_STRINGS.CLEAR,
-        value: DEFAULT_COOKIE_VALUE
+        display: DAYS_SEARCH_DISPLAY_STRINGS.CLEAR,
+        value: DEFAULT_DAYS_SEARCH_COOKIE_VALUE
+    }
+];
+
+var daysMovingAveragebuttonConfig = [
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.SEVEN_DAY,
+        value: DEFAULT_DAYS_MOVING_AVERAGE_COOKIE_VALUE
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.FIFTEEN_DAYS,
+        value: 15
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.THIRTY_DAYS,
+        value: 30
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.FOURTY_FIVE_DAYS,
+        value: 45
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.SIXTY_DAYS,
+        value: 60
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.THREE_MONTHS,
+        value: 90
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.SIX_MONTHS,
+        value: 180
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.ONE_YEAR,
+        value: 365
     }
 ];
 
 const checkForDefaultCookie = () => {
-    var cookie = getCookie(COOKIE_NAME);
+    var cookie = getCookie(DAYS_SEARCH_COOKIE_NAME);
 
     if(!cookie) {
-        setCookie(COOKIE_NAME, DEFAULT_COOKIE_VALUE, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
+        setCookie(DAYS_SEARCH_COOKIE_NAME, DEFAULT_DAYS_SEARCH_COOKIE_VALUE, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
     }
 }
 
-const getCookieValue = () => {
-    return getCookie(COOKIE_NAME);
+const getDaysSearchCookieValue = () => {
+    return getCookie(DAYS_SEARCH_COOKIE_NAME);
 }
 
 const getNumberOfDaysFromCookie = () => {
     const currDayOfYear = getDays(startOfYear);
     const numberOfDaysToBeginning = getDays(earliestDate);
 
-    var cookie = getCookieValue();
+    var cookie = getDaysSearchCookieValue();
 
     if(!cookie) {
-        setCookie(COOKIE_NAME, DEFAULT_COOKIE_VALUE, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
-        return DEFAULT_COOKIE_VALUE;
+        setCookie(DAYS_SEARCH_COOKIE_NAME, DEFAULT_DAYS_SEARCH_COOKIE_VALUE, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
+        return DEFAULT_DAYS_SEARCH_COOKIE_VALUE;
     }
 
     switch(cookie) {
-        case DISPLAY_STRINGS.YEAR_TO_DATE:
+        case DAYS_SEARCH_DISPLAY_STRINGS.YEAR_TO_DATE:
             return currDayOfYear;
-        case DISPLAY_STRINGS.ALL_TIME:
+        case DAYS_SEARCH_DISPLAY_STRINGS.ALL_TIME:
             return numberOfDaysToBeginning;
         default:
             return cookie;
     }
 }
 
+const getDaysMovingAverageFromCookie = () => {
+    const cookie = getCookie(DAYS_MOVING_AVERAGE_COOKIE_NAME);
+
+    if(!cookie) {
+        setCookie(DAYS_MOVING_AVERAGE_COOKIE_NAME, DEFAULT_DAYS_MOVING_AVERAGE_COOKIE_VALUE, DEFAULT_COOKIE_EXPIRATION_IN_DAYS)
+        return DEFAULT_DAYS_MOVING_AVERAGE_COOKIE_VALUE;
+    }
+    return cookie;
+}
+
 function eraseCookie(name) {   
     document.cookie = name+'=; Max-Age=-99999999;';  
 }
 
-const updateCookie = (display, value) => {
-    setCookie(COOKIE_NAME, value, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
+const updateDaysSearchCookie = (display, value) => {
+    setCookie(DAYS_SEARCH_COOKIE_NAME, value, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
 
-    if(display === DISPLAY_STRINGS.CLEAR) {
-        eraseCookie(COOKIE_NAME);
+    if(display === DAYS_SEARCH_DISPLAY_STRINGS.CLEAR) {
+        eraseCookie(DAYS_SEARCH_COOKIE_NAME);
     }
     window.location.reload();
 }
 
-const getCssClass = (display, value) => {
-    if (display == DISPLAY_STRINGS.CLEAR) {
-        return otherButtonClass; // never highlight clear
-    }
-    return display == getCookieValue() || value == getNumberOfDaysFromCookie() ? selectedButtonClass : otherButtonClass;
+const updateDaysMovingAverageCookie = (display, value) => {
+    setCookie(DAYS_MOVING_AVERAGE_COOKIE_NAME, value, DEFAULT_COOKIE_EXPIRATION_IN_DAYS);
+    window.location.reload();
 }
 
-const templateStringForButton = (display, value) => `<button type="button" id="chartscript${display}" class="${getCssClass(display, value)}">${display}</button>`;
+const getCssClassForDaysSearch = (display, value) => {
+    if (display == DAYS_SEARCH_DISPLAY_STRINGS.CLEAR) {
+        return otherButtonClass; // never highlight clear
+    }
+    return display == getDaysSearchCookieValue() || value == getNumberOfDaysFromCookie() ? selectedButtonClass : otherButtonClass;
+}
 
-const templateIdString = (button) => `chartscript${button.display}`
+const getCssClassForDaysMovingAverage = (display, value) => {
+    return display == getDaysMovingAverageFromCookie() || value == getDaysMovingAverageFromCookie() ? selectedButtonClass : otherButtonClass;
+}
 
-const getCookieHtml = () => {
-    const html = buttonConfig.map((button) => templateStringForButton(button.display, button.value)).join('');
+const daysSearchId = 'daysSearch';
+const daysMovingAverageId = 'ma';
+
+const templateButtonHtml = (id, button, cssClassFunction) => `<button type="button" id="${id}${button.display}" class="${cssClassFunction(button.display, button.value)}">${button.display}</button>`;
+const templateButtonId = (id, button) => `${id}${button.display}`
+
+const getDaysSearchHtml = () => {
+    const html = daysSearchbuttonConfig.map((button) => templateButtonHtml(daysSearchId, button, getCssClassForDaysSearch)).join('');
+    return html;
+}
+
+const getDaysMovingAverageHtml = () => {
+    const html = daysMovingAveragebuttonConfig.map((button) => templateButtonHtml(daysMovingAverageId, button, getCssClassForDaysMovingAverage));
     return html;
 }
 
 const attachEventListenerToCookieButtons = () => {
-    buttonConfig.forEach((button) => {
-        document.getElementById(templateIdString(button)).addEventListener ("click", updateCookie.bind(this, button.display, button.value), false);    
+    const click = 'click';
+    daysSearchbuttonConfig.forEach((button) => {
+        document.getElementById(templateButtonId(daysSearchId, button)).addEventListener(click, updateDaysSearchCookie.bind(this, button.display, button.value), false);
+    });
+
+    daysMovingAveragebuttonConfig.forEach((button) => {
+        document.getElementById(templateButtonId(daysMovingAverageId, button)).addEventListener(click, updateDaysMovingAverageCookie.bind(this, button.display, button.value), false);
     });
 }
 
