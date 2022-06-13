@@ -1,21 +1,29 @@
+const fileNameSuffix = formatDateToYYYYMMDD(new Date());
+
 const CHART_CONFIG = {
     LINE_CHART: {
         id: 'line_chart_id',
         title: 'line-chart',
         download_id: 'line-chart-download',
-        file_name: 'line chart'
+        file_name: `${fileNameSuffix} - line chart`
     },
     PIE_CHART_SPLIT_BY_TYPE: {
         id: 'pie-chart-split-by-type-id',
-        title: 'pie-chart-split-by-type',
+        title: 'investments split by type',
         download_id: 'pie-chart-split-by-type-download',
-        file_name: 'pie-chart-split-by-type'
+        file_name: `${fileNameSuffix} - pie-chart-split-by-type`
     },
     PIE_CHART_SPLIT_BY_ACCOUNTS: {
         id: 'pie-chart-split-by-accounts-id',
-        title: 'pie-chart-split-by-accounts',
+        title: 'investments split by accounts',
         download_id: 'pie-chart-split-by-accounts-download',
-        file_name: 'pie-chart-split-by-accounts'
+        file_name: `${fileNameSuffix} - pie-chart-split-by-accounts`
+    },
+    PIE_CHART_SPLIT_BY_SYMBOL: {
+        id: 'pie-chart-split-by-symbol-id',
+        title: 'every investment split by symbol',
+        download_id: 'pie-chart-split-by-symbol',
+        file_name: `${fileNameSuffix} - pie-chart-split-by-symbol`
     }
 }
 
@@ -289,6 +297,89 @@ const getPieChartSplitByAccountsConfig = (accounts, ...investments)  =>{
                     },
                     position: 'top'
                 },
+            }
+        }
+    };
+}
+
+const getPieChartSplitBySymbolConfig = (crypto_price_map, ...investments) => {
+    const cleanData = investments
+        .flat()
+        .filter((e) => { return e.symbol })
+        // .filter((e) => { return e.symbol !== 'USD'})
+        .map((e) => {
+            const newObj = {
+                symbol: e.symbol,
+                currentPrice: e.currentPrice || crypto_price_map.get(e.symbol),
+                currentValue: e.currentValue,
+                accountId: e.accountId
+            }
+            return newObj;
+        })
+        .sort(sortSymbols);
+
+    const stocksMap = new Map();
+
+    cleanData
+        .forEach((e) => {
+            if(stocksMap.has(e.symbol)) {
+                stocksMap.set(e.symbol, e.currentValue + stocksMap.get(e.symbol));
+            } else {
+                stocksMap.set(e.symbol, e.currentValue);
+            }
+        });
+
+    const labels = [...stocksMap.keys()];
+    const dataSet = [...stocksMap.values()];
+    const totalPortfolioValue = dataSet.reduce(sumReducer);
+    const usedColors = new Set();
+    var i = 0;
+    var backgroundColors = [];
+    while(i < labels.length) {
+        const currColor = dynamicColors();
+        if(!usedColors.has(currColor)) {
+            usedColors.add(currColor);
+            backgroundColors.push(currColor);
+            i++;
+        }
+    }
+
+    const data = {
+      labels: labels,
+      datasets: [{
+        data: dataSet,
+        backgroundColor: backgroundColors,
+        // backgroundColor: labels.map((e) => dynamicColors()),
+        hoverOffset: 4,
+      }]
+    };
+    return {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return currencyFormatter.format(context.parsed)
+                        },
+                        afterLabel: function(context) {
+                            const rawPercentage = context.parsed / totalPortfolioValue;
+                            return `${percentageFormatter.format(rawPercentage)} of portfolio`;
+                        },
+                        afterTitle: function(context) {
+                            return context[0].label
+                        },
+                    }
+                },
+                legend: {
+                    display: true,
+                    labels: {
+                        color: COLORS.WHITE
+                    },
+                    position: 'top'
+                }
             }
         }
     };
