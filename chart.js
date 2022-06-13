@@ -10,6 +10,12 @@ const CHART_CONFIG = {
         title: 'pie-chart-split-by-type',
         download_id: 'pie-chart-split-by-type-download',
         file_name: 'pie-chart-split-by-type'
+    },
+    PIE_CHART_SPLIT_BY_ACCOUNTS: {
+        id: 'pie-chart-split-by-accounts-id',
+        title: 'pie-chart-split-by-accounts',
+        download_id: 'pie-chart-split-by-accounts-download',
+        file_name: 'pie-chart-split-by-accounts'
     }
 }
 
@@ -173,6 +179,116 @@ const getPieChartSplitByTypeConfig = (entire_picture) => {
                     },
                     position: 'right'
                 }
+            }
+        }
+    };
+}
+
+const getPieChartSplitByAccountsConfig = (accounts, ...investments)  =>{
+    let accountsSplitMap = new Map();
+
+    var checking_accounts = accounts
+        .filter((e) => e.bankAccountType === 'CHECKING')
+        .map((e) => {
+            const newObj = {
+                currentValue: e.availableBalance,
+                symbol: e.fiName,
+                accountId: e.fiName
+            }
+            return newObj;
+        })
+        .filter((e) => e.currentValue > 0);
+
+    const cleanData = []
+        .concat(checking_accounts, investments)
+        .flat()
+        .filter((e) => {
+            if(e.accountStatus && e.accountStatus !== 'ACTIVE') {
+                return false;
+            }
+            return true;
+        })
+        .filter((e) => e.type !== "CreditAccount")
+        .filter((e) => {
+            if(e.availableBalance && e.availableBalance === 0) {
+                return false;
+            }
+            return true;
+        })
+        .filter((e) => {
+            if(e.currentBalance && e.currentBalance === 0) {
+                return false;
+            }
+            return true;
+        })
+        .filter((e) => e.symbol !== undefined)
+        .filter((e) => e.availableBalance !== 0)
+        .map((e) => {
+            const newObj = {
+                symbol: e.symbol,
+                currentValue: e.currentBalance || e.currentValue || e.availableBalance,
+                accountId: e.accountId.trim()
+            }
+            return newObj;
+        })
+        .sort(sortAccountId);
+
+    cleanData.forEach((e) => {
+        if(accountsSplitMap.has(e.accountId)) {
+            accountsSplitMap.set(e.accountId, accountsSplitMap.get(e.accountId) + e.currentValue);
+        } else {
+            accountsSplitMap.set(e.accountId, e.currentValue);
+        }
+    });
+
+    accountsSplitMap = new Map([...accountsSplitMap.entries()].sort((a, b) => {
+        return a[1] - b[2]
+    }));
+
+    const labels = [...accountsSplitMap.keys()];
+    const dataSet = [...accountsSplitMap.values()];
+    const totalPortfolioValue = dataSet.reduce(sumReducer);
+    const data = {
+      labels: labels,
+      datasets: [{
+        data: dataSet,
+        backgroundColor: [
+            COLORS.RED,
+            COLORS.BLUE,
+            COLORS.YELLOW,
+            'purple',
+            'green'
+        ],
+        hoverOffset: 4,
+      }]
+    };
+    return {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return currencyFormatter.format(context.parsed)
+                        },
+                        afterLabel: function(context) {
+                            const rawPercentage = context.parsed / totalPortfolioValue;
+                            return `${percentageFormatter.format(rawPercentage)} of portfolio`;
+                        },
+                        afterTitle: function(context) {
+                            return context[0].label
+                        },
+                    }
+                },
+                legend: {
+                    display: true,
+                    labels: {
+                        color: COLORS.WHITE
+                    },
+                    position: 'top'
+                },
             }
         }
     };
