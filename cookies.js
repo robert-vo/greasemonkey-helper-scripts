@@ -44,7 +44,9 @@ const DAYS_SEARCH_DISPLAY_STRINGS = {
 }
 
 const DAYS_MOVING_AVERAGE_DISPLAY_STRINGS = {
-    SEVEN_DAY: '7-day MA',
+    TWO_DAYS: '2-day MA',
+    THREE_DAYS: '3-day MA',
+    SEVEN_DAYS: '7-day MA',
     FIFTEEN_DAYS: '15-day MA',
     THIRTY_DAYS: '30-day MA',
     FOURTY_FIVE_DAYS: '45-day MA',
@@ -61,6 +63,18 @@ const DAYS_SEARCH_COOKIE_NAME = 'Q2hhcnRDb29raWU' // ChartCookie minus = base64
 const DAYS_MOVING_AVERAGE_COOKIE_NAME = 'RGF5c01vdmluZ0F2ZXJhZ2UK' // DaysMovingAverage minus = base64
 
 var daysSearchbuttonConfig = [
+    {
+        display: DAYS_SEARCH_DISPLAY_STRINGS.ONE_DAY,
+        value: 1
+    },
+    {
+        display: DAYS_SEARCH_DISPLAY_STRINGS.FIVE_DAYS,
+        value: 5
+    },
+    {
+        display: DAYS_SEARCH_DISPLAY_STRINGS.FIFTEEN_DAYS,
+        value: 15
+    },
     {
         display: DAYS_SEARCH_DISPLAY_STRINGS.THIRTY_DAYS,
         value: 30
@@ -105,7 +119,15 @@ var daysSearchbuttonConfig = [
 
 var daysMovingAveragebuttonConfig = [
     {
-        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.SEVEN_DAY,
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.TWO_DAYS,
+        value: 2
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.THREE_DAYS,
+        value: 3
+    },
+    {
+        display: DAYS_MOVING_AVERAGE_DISPLAY_STRINGS.SEVEN_DAYS,
         value: DEFAULT_DAYS_MOVING_AVERAGE_COOKIE_VALUE
     },
     {
