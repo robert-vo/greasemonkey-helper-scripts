@@ -91,6 +91,24 @@ const attemptClickElementById = async (id) => {
     })
 }
 
+const clickButtonOnMapping = (mapping) => {
+    var domain = new URL(window.location.href).host;
+    var selector = mapping[domain];
+
+    if (!selector) {
+        alert(`selector not found for ${domain}! check ur config`);
+    }
+    console.log(selector);
+
+    var button = document.querySelector(selector);
+
+    if (button) {
+        console.log('clicking on button!');
+        button.click();
+    } else {
+        console.log('no button click since not found');
+    }
+}
 
 const average = (nums) => {
         return nums.reduce((a, b) => (a + b)) / nums.length;
