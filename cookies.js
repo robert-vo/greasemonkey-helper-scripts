@@ -22,7 +22,7 @@ const setCookie = (cname, cvalue, exdays) => {
 }
 
 const currDate = new Date();
-const startOfYear = new Date(currDate.getFullYear(), 0, 0);
+const startOfYear = new Date(currDate.getFullYear(), 0, 1);
 const earliestDate = new Date("05/29/2018"); // earliest date is 5/29/2018
 const timeToDaysMultiplier = 1000 * 60 * 60 * 24;
 const getDays = (startDate) => Math.floor((currDate - startDate) / timeToDaysMultiplier);
